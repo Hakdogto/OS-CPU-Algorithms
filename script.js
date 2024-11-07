@@ -23,7 +23,7 @@ function generateInputs() {
             <label>Burst Time:</label>
             <input type="number" id="burst${i}" min="1" required>
             <label>Priority:</label>
-            <input type="number" id="priority${i}" min="0" ${algorithm === "PriorityPreemptive" ? 'required' : ''}>
+            <input type="number" id="priority${i}" min="0" required}>
         `;
         inputFields.appendChild(div);
     }
@@ -68,7 +68,8 @@ function calculateFCFS() {
     for (let i = 0; i < numProcesses; i++) {
         const arrivalTime = parseInt(document.getElementById(`arrival${i}`).value);
         const burstTime = parseInt(document.getElementById(`burst${i}`).value);
-        processes.push({ id: i + 1, arrivalTime, burstTime });
+        const priority = parseInt(document.getElementById(`priority${i}`).value);
+        processes.push({ id: i + 1, arrivalTime, burstTime, priority });
     }
 
     processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
@@ -89,6 +90,7 @@ function calculateFCFS() {
             processId: process.id,
             arrivalTime: process.arrivalTime,
             burstTime: process.burstTime,
+            priority: process.priority,
             completionTime,
             turnaroundTime,
             waitingTime,
@@ -118,7 +120,8 @@ function calculateSJF() {
     for (let i = 0; i < numProcesses; i++) {
         const arrivalTime = parseInt(document.getElementById(`arrival${i}`).value);
         const burstTime = parseInt(document.getElementById(`burst${i}`).value);
-        processes.push({ id: i + 1, arrivalTime, burstTime });
+        const priority = parseInt(document.getElementById(`priority${i}`).value);
+        processes.push({ id: i + 1, arrivalTime, burstTime, priority });
     }
 
     let currentTime = 0;
@@ -151,6 +154,7 @@ function calculateSJF() {
             processId: process.id,
             arrivalTime: process.arrivalTime,
             burstTime: process.burstTime,
+            priority: process.priority,
             completionTime,
             turnaroundTime,
             waitingTime,
@@ -241,7 +245,8 @@ function calculateHRRN() {
     for (let i = 0; i < numProcesses; i++) {
         const arrivalTime = parseInt(document.getElementById(`arrival${i}`).value);
         const burstTime = parseInt(document.getElementById(`burst${i}`).value);
-        processes.push({ id: i + 1, arrivalTime, burstTime });
+        const priority = parseInt(document.getElementById(`priority${i}`).value);
+        processes.push({ id: i + 1, arrivalTime, burstTime, priority });
     }
 
     let currentTime = 0;
@@ -278,6 +283,7 @@ function calculateHRRN() {
             processId: process.id,
             arrivalTime: process.arrivalTime,
             burstTime: process.burstTime,
+            priority: process.priority,
             completionTime,
             turnaroundTime,
             waitingTime,
@@ -308,10 +314,12 @@ function calculateSRTF() {
     for (let i = 0; i < numProcesses; i++) {
         const arrivalTime = parseInt(document.getElementById(`arrival${i}`).value);
         const burstTime = parseInt(document.getElementById(`burst${i}`).value);
+        const priority = parseInt(document.getElementById(`priority${i}`).value);
         processes.push({
             id: i + 1,
             arrivalTime,
             burstTime,
+            priority,
             remainingTime: burstTime,
             completionTime: 0,
             turnaroundTime: 0,
@@ -368,6 +376,7 @@ function calculateSRTF() {
         processId: p.id,
         arrivalTime: p.arrivalTime,
         burstTime: p.burstTime,
+        priority: p.priority,
         completionTime: p.completionTime,
         turnaroundTime: p.turnaroundTime,
         waitingTime: p.waitingTime
@@ -476,10 +485,13 @@ function calculateRoundRobin() {
     for (let i = 0; i < numProcesses; i++) {
         const arrivalTime = parseInt(document.getElementById(`arrival${i}`).value);
         const burstTime = parseInt(document.getElementById(`burst${i}`).value);
+        const priority = parseInt(document.getElementById(`priority${i}`).value);
         processes.push({
             id: i + 1,
             arrivalTime,
             burstTime,
+            priority,
+
             remainingTime: burstTime,
             completionTime: 0,
             turnaroundTime: 0,
@@ -558,6 +570,7 @@ function calculateRoundRobin() {
         processId: p.id,
         arrivalTime: p.arrivalTime,
         burstTime: p.burstTime,
+        priority: p.priority,
         completionTime: p.completionTime,
         turnaroundTime: p.turnaroundTime,
         waitingTime: p.waitingTime
@@ -633,3 +646,16 @@ function displayGanttChart(ganttChartData) {
         ganttTimeRow.appendChild(timeCell);
     });
 }
+
+const memberButton = document.getElementById('memberButton');
+const groupMembers = document.getElementById('groupMembers');
+
+memberButton.addEventListener('click', function() {
+  if (groupMembers.style.display === 'none' || groupMembers.style.display === '') {
+    groupMembers.style.display = 'block';
+    memberButton.textContent = 'Hide Members';
+  } else {
+    groupMembers.style.display = 'none';
+    memberButton.textContent = 'Show Members';
+  }
+});
