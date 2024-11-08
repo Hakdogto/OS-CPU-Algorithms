@@ -59,6 +59,8 @@ function calculateScheduling() {
         default:
             alert("Please select a valid algorithm.");
     }
+    document.getElementById("results").style.display = "block";
+    document.getElementById("ganttChart").style.display = "block";
 }
 
 function calculateFCFS() {
