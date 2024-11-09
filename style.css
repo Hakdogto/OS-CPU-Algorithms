@@ -1,3 +1,46 @@
+:root {
+   
+    --base-color: #f2f2f2;
+    --container-color: white;
+    --text-color: #333333;
+    --primary-button-color: #4681f4;
+    --primary-button-hover: #5783db;
+    --secondary-button-color: #4caf50;
+    --secondary-button-hover: #45a049;
+    --input-border: #ccc;
+    --table-border: #ccc;
+    --gantt-header-bg: #f2f2f2;
+    --gantt-cell-bg: #e6e6e6;
+    --card-bg-hover: #ddd;
+    --select-color: #ffffff;
+    --membackground-color: #f5f5f5; 
+    --memborder-color: #999999; 
+}
+
+.darkmode{    
+    --base-color: #161618;
+    --container-color: #21222D;
+    --text-color: #E5E6EB;
+    --primary-button-color: #3163E6;
+    --primary-button-hover: #869dff;
+    --secondary-button-color: #0b9653;
+    --secondary-button-hover: #19AB65;
+    --input-border: #29293B;
+    --table-border: #8f9097;
+    --gantt-header-bg: #454650;
+    --gantt-cell-bg: #5d5e67;
+    --card-bg-hover: #333333;
+    --select-color: #2e303a;
+    --membackground-color: #282828; 
+    --memborder-color: #2e303a; 
+}
+
+#icon{
+    width: 30px;
+    cursor: pointer;
+    float: right;
+}
+
 *{
     box-sizing: border-box;
 }
@@ -5,11 +48,11 @@
 body {
     font-family: Helvetica, sans-serif;
     margin: 20px;
-    background-color: #f2f2f2;
+    background-color: var(--base-color);
 }
 
 .container{
-    background-color: white;
+    background-color: var(--container-color);
     max-width: 800px;
     margin: 100px auto;
     padding: 20px;
@@ -17,25 +60,33 @@ body {
     border-radius: 10px;
 }
 
+label{
+    color: var(--text-color);
+}
+
 h1, h2 {
     margin-top: 0;
     text-align: center;
+    color: var(--text-color);
 }
 
 h4, p {
-    text-align: center
+    text-align: center;
+    color: var(--text-color);
 }
 
 select{
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--input-border);
     border-radius: 4px;
     margin: 10px 0;
     width: 100%;
+    background-color: var(--select-color);
+    color: var(--text-color);
 }
 
 button{
-    background-color: #4681f4;
+    background-color: var(--primary-button-color);
     color: white;
     padding: 10px;
     border: none;
@@ -48,16 +99,26 @@ button{
 }
 
 button:hover{
-    background-color: #5783db;
+    background-color: var(--primary-button-hover);
 }
 
 input{
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--input-border);
     border-radius: 4px;
     margin: 10px 0;
     width: 100%;
+    background-color: var(--select-color);
+    color: var(--text-color); 
 }
+
+input:focus{
+    outline: none;
+    }
+
+select:focus{
+    outline: none;
+    }
 
 form, #inputFields, #results, #ganttChart {
     margin: 20px auto;
@@ -89,8 +150,8 @@ form, #inputFields, #results, #ganttChart {
 }
 
 #calculateBtn {
-    background-color: #4caf50;
-    color: white;
+    background-color: var(--secondary-button-color);
+    
     padding: 10px;
     border: none;
     margin: 10px 0;
@@ -102,7 +163,7 @@ form, #inputFields, #results, #ganttChart {
 }
 
 #calculateBtn:hover{
-    background-color: #45a049;
+    background-color: var(--secondary-button-hover);
 }
 
 
@@ -111,10 +172,12 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    background-color: var(--container-color);
+    color: var(--text-color);
 }
 
 table, th, td {
-    border: 1px solid #ccc;
+    border: 1px solid var(--table-border);
     padding: 8px;
     text-align: center;
 }
@@ -125,24 +188,89 @@ table, th, td {
 }
 
 #ganttProcessRow th {
-    background-color: #f2f2f2;
+    background-color: var(--gantt-cell-bg);
 }
 
 #ganttTimeRow td {
-    background-color: #e6e6e6;
+    background-color: var(--gantt-header-bg);
 }
 
 #memberButton {
-    width: 400px;
+    width: 250px;
+    padding: 10px;
+    font-size: 16px;
+    color: var(--text-color);
+    background-color: transparent;
+    border: 1px solid var(--input-border); /* Light gray border */
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 20px auto;
     display: block;
-    margin: auto;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-#groupMembers {
+#memberButton:hover {
+    background-color: var(--membackground-color); /* Very light gray on hover */
+    border-color: var(--memborder-color); /* Darken border on hover */
+}
+
+  .groupMembers {
     display: none;
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-  }
-  
+    text-align: center;
+    background: var(--base-color);
+}
+
+.header {
+    padding-top: 30px;
+    color: #444;
+    font-size: 20px;
+    margin: auto;
+    line-height: 50px;
+}
+
+.sub-container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 30px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.teams {
+    margin: 10px;
+    padding: 22px;
+    max-width: 30%;
+    cursor: pointer;
+    transition: 0.4s;
+    box-sizing: border-box;
+}
+
+.teams:hover {
+    background: var(--card-bg-hover);
+    border-radius: 12px;
+}
+
+.teams img {
+    width: 200px;
+    height: 200px;
+}
+
+.name {
+    padding: 12px;
+    font-weight: bold;
+    font-size: 16px;
+    text-transform: uppercase;
+    color: var(--text-color);
+}
+
+.desig {
+    font-style: italic;
+    color: #888;
+}
+
+@media screen and (max-width: 600px) {
+    .teams {
+        max-width: 100%;
+    }
+}
