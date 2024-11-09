@@ -1,3 +1,16 @@
+var icon = document.getElementById("icon");
+
+icon.onclick = function(){
+    document.body.classList.toggle("darkmode");
+    if(document.body.classList.contains("darkmode")){
+        icon.src = "sun.png";
+    } else {
+        icon.src = "moon.png";
+    }
+}
+
+
+
 function generateInputs() {
     const numProcesses = parseInt(document.getElementById("numProcesses").value);
     const inputFields = document.getElementById("inputFields");
@@ -650,7 +663,7 @@ function displayGanttChart(ganttChartData) {
 }
 
 const memberButton = document.getElementById('memberButton');
-const groupMembers = document.getElementById('groupMembers');
+const groupMembers = document.querySelector('.groupMembers'); // Select by class
 
 memberButton.addEventListener('click', function() {
   if (groupMembers.style.display === 'none' || groupMembers.style.display === '') {
@@ -661,3 +674,4 @@ memberButton.addEventListener('click', function() {
     memberButton.textContent = 'Show Members';
   }
 });
+
