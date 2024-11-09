@@ -657,7 +657,7 @@ function displayGanttChart(ganttChartData) {
         ganttProcessRow.appendChild(processCell);
 
         const timeCell = document.createElement("td");
-        timeCell.textContent = `${startTime}  ‎ ‎ ‎ ‎ - ‎ ‎ ‎ ‎  ${endTime}`;
+        timeCell.textContent = `${startTime}  ‎- ‎ ${endTime}`;
         ganttTimeRow.appendChild(timeCell);
     });
 }
