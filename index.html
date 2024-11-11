@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=800, initial-scale=1.0">
     <title>Scheduling Algorithm Calculator</title>
     <link rel="stylesheet" href="style.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 </head>
 <body>
     <div class="container">
@@ -53,6 +60,7 @@
                     <th>Completion Time</th>
                     <th>Turnaround Time</th>
                     <th>Waiting Time</th>
+                    <th>Response Time</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -69,6 +77,49 @@
             </thead>
         </table>
     </div>
+    </div>
+
+    <br>
+
+    <div class="wrapper">
+        <h2>Frequently Asked Questions</h2>
+  
+        <div class="faq">
+          <button class="accordion">
+            What is this project about?
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="pannel">
+            <p>
+              This project is dedicated to our esteemed professor, Ma'am Batalla, as part of our Midterm Laboratory Assignment. Created using HTML, CSS, and JavaScript, the website demonstrates our knowledge and application of CPU scheduling algorithms. It currently includes several scheduling algorithms: non-preemptive algorithms like First Come, First Serve (FCFS), Shortest Job First (SJF), Priority (Non-Preemptive), and Highest Response Ratio Next (HRRN), as well as preemptive algorithms such as Shortest Remaining Time First (SRTF), Priority (Preemptive), and Round Robin (RR).
+            </p>
+          </div>
+        </div>
+  
+        <div class="faq">
+          <button class="accordion">
+            How do I use the calculator?
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="pannel">
+            <p>
+              To use the calculator, start by selecting the CPU scheduling algorithm you want to apply. Next, enter the number of processes and click "Generate" to bring up input fields for each process’s Arrival Time, Burst Time, and Priority (if applicable). Once you've filled in the values, click "Calculate" to view the results. The results include a table showing the Arrival Time, Burst Time, Priority Level, Completion Time, Turnaround Time, Waiting Time, Response Time, and averages for Turnaround and Waiting Times. Additionally, a Gantt Chart is provided, displaying the sequence of processes along with their start and end times.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq">
+            <button class="accordion">
+              How do I turn on dark mode?
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="pannel">
+              <p>
+                For visual comfort, a Dark Mode option is available on the website. To activate it, simply click the Dark Mode button located at the top right corner of the page, next to the title. This feature allows you to toggle between light and dark themes, adjusting the display to your preference.
+              </p>
+            </div>
+          </div>
+
     </div>
 
     <button id="memberButton">Show Members</button>
