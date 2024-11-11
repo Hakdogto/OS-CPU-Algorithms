@@ -1,3 +1,22 @@
+var acc = document.getElementsByClassName("accordion");
+      var i;
+
+      for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+          this.classList.toggle("active");
+          this.parentElement.classList.toggle("active");
+
+          var pannel = this.nextElementSibling;
+
+          if (pannel.style.display === "block") {
+            pannel.style.display = "none";
+          } else {
+            pannel.style.display = "block";
+          }
+        });
+      }
+
+
 var icon = document.getElementById("icon");
 
 icon.onclick = function(){
@@ -100,6 +119,7 @@ function calculateFCFS() {
         const completionTime = startTime + process.burstTime;
         const turnaroundTime = completionTime - process.arrivalTime;
         const waitingTime = turnaroundTime - process.burstTime;
+        const responseTime = startTime - process.arrivalTime;
 
         results.push({
             processId: process.id,
@@ -109,6 +129,7 @@ function calculateFCFS() {
             completionTime,
             turnaroundTime,
             waitingTime,
+            responseTime,
         });
 
         ganttChartData.push({
@@ -610,10 +631,11 @@ function displayResults(results, avgTurnaroundTime, avgWaitingTime) {
             <td>${result.processId}</td>
             <td>${result.arrivalTime}</td>
             <td>${result.burstTime}</td>
-            <td>${result.priority !== undefined ? result.priority : '-'}</td>
+            <td>${result.priority !== undefined && result.priority !== null ? result.priority : '-'}</td>
             <td>${result.completionTime}</td>
             <td>${result.turnaroundTime}</td>
             <td>${result.waitingTime}</td>
+            <td>${result.responseTime}</td>
         `;
         resultTableBody.appendChild(row);
     });
