@@ -185,6 +185,7 @@ function calculateSJF() {
         const completionTime = startTime + process.burstTime;
         const turnaroundTime = completionTime - process.arrivalTime;
         const waitingTime = turnaroundTime - process.burstTime;
+        const responseTime = startTime - process.arrivalTime;
 
         results.push({
             processId: process.id,
@@ -194,6 +195,7 @@ function calculateSJF() {
             completionTime,
             turnaroundTime,
             waitingTime,
+            responseTime,
         });
 
         ganttChartData.push({
@@ -247,14 +249,17 @@ function calculatePriority() {
         const completionTime = startTime + process.burstTime;
         const turnaroundTime = completionTime - process.arrivalTime;
         const waitingTime = turnaroundTime - process.burstTime;
+        const responseTime = startTime - process.arrivalTime;
 
         results.push({
             processId: process.id,
             arrivalTime: process.arrivalTime,
             burstTime: process.burstTime,
+            priority: process.priority,
             completionTime,
             turnaroundTime,
             waitingTime,
+            responseTime,
         });
 
         ganttChartData.push({
@@ -314,6 +319,7 @@ function calculateHRRN() {
         const completionTime = startTime + process.burstTime;
         const turnaroundTime = completionTime - process.arrivalTime;
         const waitingTime = turnaroundTime - process.burstTime;
+        const responseTime = startTime - process.arrivalTime;
 
         results.push({
             processId: process.id,
@@ -323,6 +329,7 @@ function calculateHRRN() {
             completionTime,
             turnaroundTime,
             waitingTime,
+            responseTime,
         });
 
         ganttChartData.push({
