@@ -432,7 +432,12 @@ function calculateSRTF() {
         responseTime: p.responseTime
     })).sort((a, b) => a.processId - b.processId);
 
-    displayResults(results, calculateAverage(results, 'turnaroundTime'), calculateAverage(results, 'waitingTime'), calculateAverage(results, 'responseTime'));
+    displayResults(
+        results,
+        calculateAverage(results, 'turnaroundTime'),
+        calculateAverage(results, 'waitingTime'),
+        calculateAverage(results, 'responseTime')  // Include average response time
+    );
     displayGanttChart(ganttChartData);
 }
 
@@ -447,6 +452,7 @@ function findNextProcessSRTF(processes, currentTime) {
     }
     return idx;
 }
+
 
 
 function calculatePriorityPreemptive() {
@@ -662,7 +668,7 @@ function calculateAverage(results, field) {
     return results.reduce((sum, r) => sum + r[field], 0) / results.length;
 }
 
-function displayResults(results, avgTurnaroundTime, avgWaitingTime) {
+function displayResults(results, avgTurnaroundTime, avgWaitingTime, avgResponseTime) {
     const resultTableBody = document.getElementById("resultTable").getElementsByTagName("tbody")[0];
     const averageTimes = document.getElementById("averageTimes");
 
@@ -682,7 +688,7 @@ function displayResults(results, avgTurnaroundTime, avgWaitingTime) {
         resultTableBody.appendChild(row);
     });
 
-    averageTimes.textContent = `Average Turnaround Time: ${avgTurnaroundTime.toFixed(2)}, Average Waiting Time: ${avgWaitingTime.toFixed(2)}`;
+    averageTimes.textContent = `Average Turnaround Time: ${avgTurnaroundTime.toFixed(2)}, Average Waiting Time: ${avgWaitingTime.toFixed(2)}, Average Response Time: ${avgResponseTime.toFixed(2)}`;
 }
 
 function displayGanttChart(ganttChartData) {
