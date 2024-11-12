@@ -366,7 +366,8 @@ function calculateSRTF() {
             remainingTime: burstTime,
             completionTime: 0,
             turnaroundTime: 0,
-            waitingTime: 0
+            waitingTime: 0,
+            responseTime: -1  // Initialize response time with -1 to mark first execution
         });
     }
 
@@ -391,6 +392,11 @@ function calculateSRTF() {
             continue;
         }
 
+        // Set response time if this is the first time the process runs
+        if (processes[idx].responseTime === -1) {
+            processes[idx].responseTime = currentTime - processes[idx].arrivalTime;
+        }
+
         // Execute the process for 1 unit time
         if (ganttChartData.length === 0 || ganttChartData[ganttChartData.length - 1].processId !== `P${processes[idx].id}`) {
             ganttChartData.push({ processId: `P${processes[idx].id}`, startTime: currentTime });
@@ -406,7 +412,7 @@ function calculateSRTF() {
             completedCount++;
             ganttChartData[ganttChartData.length - 1].endTime = currentTime;
         } else {
-            // Check if next process is different
+            // Check if the next process is different
             const nextIdx = findNextProcessSRTF(processes, currentTime);
             if (nextIdx !== idx) {
                 ganttChartData[ganttChartData.length - 1].endTime = currentTime;
@@ -422,10 +428,11 @@ function calculateSRTF() {
         priority: p.priority,
         completionTime: p.completionTime,
         turnaroundTime: p.turnaroundTime,
-        waitingTime: p.waitingTime
+        waitingTime: p.waitingTime,
+        responseTime: p.responseTime
     })).sort((a, b) => a.processId - b.processId);
 
-    displayResults(results, calculateAverage(results, 'turnaroundTime'), calculateAverage(results, 'waitingTime'));
+    displayResults(results, calculateAverage(results, 'turnaroundTime'), calculateAverage(results, 'waitingTime'), calculateAverage(results, 'responseTime'));
     displayGanttChart(ganttChartData);
 }
 
@@ -440,6 +447,7 @@ function findNextProcessSRTF(processes, currentTime) {
     }
     return idx;
 }
+
 
 function calculatePriorityPreemptive() {
     const numProcesses = parseInt(document.getElementById("numProcesses").value);
@@ -457,7 +465,8 @@ function calculatePriorityPreemptive() {
             remainingTime: burstTime,
             completionTime: 0,
             turnaroundTime: 0,
-            waitingTime: 0
+            waitingTime: 0,
+            responseTime: -1  // Initialize response time with -1 to indicate first execution
         });
     }
 
@@ -467,7 +476,7 @@ function calculatePriorityPreemptive() {
     const num = numProcesses;
 
     while (completedCount < numProcesses) {
-        // Find process with highest priority among the arrived processes
+        // Find process with highest priority (lowest priority value) among the arrived processes
         let idx = -1;
         let highestPriority = Infinity;
         for (let i = 0; i < numProcesses; i++) {
@@ -480,6 +489,11 @@ function calculatePriorityPreemptive() {
         if (idx === -1) {
             currentTime++;
             continue;
+        }
+
+        // Set response time if this is the first time the process runs
+        if (processes[idx].responseTime === -1) {
+            processes[idx].responseTime = currentTime - processes[idx].arrivalTime;
         }
 
         // Execute the process for 1 unit time
@@ -497,7 +511,7 @@ function calculatePriorityPreemptive() {
             completedCount++;
             ganttChartData[ganttChartData.length - 1].endTime = currentTime;
         } else {
-            // Check if next process has different priority
+            // Check if next process has a different priority
             const nextIdx = findNextProcessPriorityPreemptive(processes, currentTime);
             if (nextIdx !== idx) {
                 ganttChartData[ganttChartData.length - 1].endTime = currentTime;
@@ -513,12 +527,26 @@ function calculatePriorityPreemptive() {
         priority: p.priority,
         completionTime: p.completionTime,
         turnaroundTime: p.turnaroundTime,
-        waitingTime: p.waitingTime
+        waitingTime: p.waitingTime,
+        responseTime: p.responseTime
     })).sort((a, b) => a.processId - b.processId);
 
-    displayResults(results, calculateAverage(results, 'turnaroundTime'), calculateAverage(results, 'waitingTime'));
+    displayResults(results, calculateAverage(results, 'turnaroundTime'), calculateAverage(results, 'waitingTime'), calculateAverage(results, 'responseTime'));
     displayGanttChart(ganttChartData);
 }
+
+function findNextProcessPriorityPreemptive(processes, currentTime) {
+    let idx = -1;
+    let highestPriority = Infinity;
+    for (let i = 0; i < processes.length; i++) {
+        if (processes[i].arrivalTime <= currentTime && processes[i].remainingTime > 0 && processes[i].priority < highestPriority) {
+            highestPriority = processes[i].priority;
+            idx = i;
+        }
+    }
+    return idx;
+}
+
 
 function calculateRoundRobin() {
     const numProcesses = parseInt(document.getElementById("numProcesses").value);
@@ -534,11 +562,11 @@ function calculateRoundRobin() {
             arrivalTime,
             burstTime,
             priority,
-
             remainingTime: burstTime,
             completionTime: 0,
             turnaroundTime: 0,
-            waitingTime: 0
+            waitingTime: 0,
+            responseTime: -1  // Initialize response time with -1 to mark first response calculation
         });
     }
 
@@ -571,6 +599,11 @@ function calculateRoundRobin() {
         isInQueue[currentProcess.id - 1] = false;
 
         const executionTime = Math.min(timeQuantum, currentProcess.remainingTime);
+
+        // Set response time if it's the first time this process runs
+        if (currentProcess.responseTime === -1) {
+            currentProcess.responseTime = currentTime - currentProcess.arrivalTime;
+        }
 
         // Record Gantt chart entry
         if (ganttChartData.length === 0 || ganttChartData[ganttChartData.length - 1].processId !== `P${currentProcess.id}`) {
@@ -616,12 +649,14 @@ function calculateRoundRobin() {
         priority: p.priority,
         completionTime: p.completionTime,
         turnaroundTime: p.turnaroundTime,
-        waitingTime: p.waitingTime
+        waitingTime: p.waitingTime,
+        responseTime: p.responseTime
     })).sort((a, b) => a.processId - b.processId);
 
-    displayResults(results, calculateAverage(results, 'turnaroundTime'), calculateAverage(results, 'waitingTime'));
+    displayResults(results, calculateAverage(results, 'turnaroundTime'), calculateAverage(results, 'waitingTime'), calculateAverage(results, 'responseTime'));
     displayGanttChart(ganttChartData);
 }
+
 
 function calculateAverage(results, field) {
     return results.reduce((sum, r) => sum + r[field], 0) / results.length;
