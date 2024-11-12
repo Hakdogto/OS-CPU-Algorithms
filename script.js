@@ -111,6 +111,7 @@ function calculateFCFS() {
     let currentTime = 0;
     let totalTurnaroundTime = 0;
     let totalWaitingTime = 0;
+    let totalResponseTime = 0;
     const results = [];
     const ganttChartData = [];
 
@@ -140,14 +141,21 @@ function calculateFCFS() {
 
         totalTurnaroundTime += turnaroundTime;
         totalWaitingTime += waitingTime;
+        totalResponseTime += responseTime;
         currentTime = completionTime;
     });
 
     results.sort((a, b) => a.processId - b.processId);
 
-    displayResults(results, totalTurnaroundTime / numProcesses, totalWaitingTime / numProcesses);
+    displayResults(
+        results,
+        totalTurnaroundTime / numProcesses,
+        totalWaitingTime / numProcesses,
+        totalResponseTime / numProcesses
+    );
     displayGanttChart(ganttChartData);
 }
+
 
 function calculateSJF() {
     const numProcesses = parseInt(document.getElementById("numProcesses").value);
@@ -163,6 +171,9 @@ function calculateSJF() {
     let currentTime = 0;
     const completed = Array(numProcesses).fill(false);
     let completedCount = 0;
+    let totalTurnaroundTime = 0;
+    let totalWaitingTime = 0;
+    let totalResponseTime = 0;
     const results = [];
     const ganttChartData = [];
 
@@ -204,6 +215,9 @@ function calculateSJF() {
             endTime: completionTime,
         });
 
+        totalTurnaroundTime += turnaroundTime;
+        totalWaitingTime += waitingTime;
+        totalResponseTime += responseTime;
         currentTime = completionTime;
         completed[process.index] = true;
         completedCount++;
@@ -212,9 +226,15 @@ function calculateSJF() {
     // Sort results by process ID for ascending order
     results.sort((a, b) => a.processId - b.processId);
 
-    displayResults(results, calculateAverage(results, 'turnaroundTime'), calculateAverage(results, 'waitingTime'));
+    displayResults(
+        results,
+        totalTurnaroundTime / numProcesses,
+        totalWaitingTime / numProcesses,
+        totalResponseTime / numProcesses
+    );
     displayGanttChart(ganttChartData);
 }
+
 
 function calculatePriority() {
     const numProcesses = parseInt(document.getElementById("numProcesses").value);
@@ -230,6 +250,9 @@ function calculatePriority() {
     let currentTime = 0;
     const completed = Array(numProcesses).fill(false);
     let completedCount = 0;
+    let totalTurnaroundTime = 0;
+    let totalWaitingTime = 0;
+    let totalResponseTime = 0;
     const results = [];
     const ganttChartData = [];
 
@@ -268,6 +291,9 @@ function calculatePriority() {
             endTime: completionTime,
         });
 
+        totalTurnaroundTime += turnaroundTime;
+        totalWaitingTime += waitingTime;
+        totalResponseTime += responseTime;
         currentTime = completionTime;
         completed[process.index] = true;
         completedCount++;
@@ -275,9 +301,15 @@ function calculatePriority() {
 
     results.sort((a, b) => a.processId - b.processId);
 
-    displayResults(results, calculateAverage(results, 'turnaroundTime'), calculateAverage(results, 'waitingTime'));
+    displayResults(
+        results,
+        totalTurnaroundTime / numProcesses,
+        totalWaitingTime / numProcesses,
+        totalResponseTime / numProcesses
+    );
     displayGanttChart(ganttChartData);
 }
+
 
 function calculateHRRN() {
     const numProcesses = parseInt(document.getElementById("numProcesses").value);
@@ -293,12 +325,13 @@ function calculateHRRN() {
     let currentTime = 0;
     const completed = Array(numProcesses).fill(false);
     let completedCount = 0;
+    let totalTurnaroundTime = 0;
+    let totalWaitingTime = 0;
+    let totalResponseTime = 0;
     const results = [];
     const ganttChartData = [];
 
-    // Continue until all processes are completed
     while (completedCount < numProcesses) {
-        // Filter processes that have arrived and are not completed
         const availableProcesses = processes
             .map((p, index) => ({ ...p, index }))
             .filter(p => p.arrivalTime <= currentTime && !completed[p.index])
@@ -309,12 +342,11 @@ function calculateHRRN() {
             .sort((a, b) => b.responseRatio - a.responseRatio || a.arrivalTime - b.arrivalTime);
 
         if (availableProcesses.length === 0) {
-            // No process available; increment time
             currentTime++;
             continue;
         }
 
-        const process = availableProcesses[0]; // Pick process with highest response ratio
+        const process = availableProcesses[0];
         const startTime = currentTime;
         const completionTime = startTime + process.burstTime;
         const turnaroundTime = completionTime - process.arrivalTime;
@@ -338,17 +370,25 @@ function calculateHRRN() {
             endTime: completionTime,
         });
 
+        totalTurnaroundTime += turnaroundTime;
+        totalWaitingTime += waitingTime;
+        totalResponseTime += responseTime;
         currentTime = completionTime;
         completed[process.index] = true;
         completedCount++;
     }
 
-    // Sort results by process ID for ascending order
     results.sort((a, b) => a.processId - b.processId);
 
-    displayResults(results, calculateAverage(results, 'turnaroundTime'), calculateAverage(results, 'waitingTime'));
+    displayResults(
+        results,
+        totalTurnaroundTime / numProcesses,
+        totalWaitingTime / numProcesses,
+        totalResponseTime / numProcesses
+    );
     displayGanttChart(ganttChartData);
 }
+
 
 function calculateSRTF() {
     const numProcesses = parseInt(document.getElementById("numProcesses").value);
