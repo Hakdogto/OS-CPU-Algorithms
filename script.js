@@ -414,30 +414,19 @@ function calculateSRTF() {
     const ganttChartData = [];
     let currentTime = 0;
     let completedCount = 0;
-    const num = numProcesses;
 
     while (completedCount < numProcesses) {
-        // Find process with minimum remaining time among the arrived processes
-        let idx = -1;
-        let minRemaining = Infinity;
-        for (let i = 0; i < numProcesses; i++) {
-            if (processes[i].arrivalTime <= currentTime && processes[i].remainingTime > 0 && processes[i].remainingTime < minRemaining) {
-                minRemaining = processes[i].remainingTime;
-                idx = i;
-            }
-        }
+        const idx = findNextProcessSRTF(processes, currentTime);
 
         if (idx === -1) {
             currentTime++;
             continue;
         }
 
-        // Set response time if this is the first time the process runs
         if (processes[idx].responseTime === -1) {
             processes[idx].responseTime = currentTime - processes[idx].arrivalTime;
         }
 
-        // Execute the process for 1 unit time
         if (ganttChartData.length === 0 || ganttChartData[ganttChartData.length - 1].processId !== `P${processes[idx].id}`) {
             ganttChartData.push({ processId: `P${processes[idx].id}`, startTime: currentTime });
         }
@@ -452,7 +441,6 @@ function calculateSRTF() {
             completedCount++;
             ganttChartData[ganttChartData.length - 1].endTime = currentTime;
         } else {
-            // Check if the next process is different
             const nextIdx = findNextProcessSRTF(processes, currentTime);
             if (nextIdx !== idx) {
                 ganttChartData[ganttChartData.length - 1].endTime = currentTime;
@@ -460,7 +448,6 @@ function calculateSRTF() {
         }
     }
 
-    // Sort results by process ID for ascending order
     const results = processes.map(p => ({
         processId: p.id,
         arrivalTime: p.arrivalTime,
@@ -476,23 +463,32 @@ function calculateSRTF() {
         results,
         calculateAverage(results, 'turnaroundTime'),
         calculateAverage(results, 'waitingTime'),
-        calculateAverage(results, 'responseTime')  // Include average response time
+        calculateAverage(results, 'responseTime')
     );
     displayGanttChart(ganttChartData);
 }
 
 function findNextProcessSRTF(processes, currentTime) {
-    let idx = -1;
-    let minRemaining = Infinity;
+    let idx = -1; // Initialize index of selected process
+    let minRemaining = Infinity; // Minimum remaining time
+
     for (let i = 0; i < processes.length; i++) {
-        if (processes[i].arrivalTime <= currentTime && processes[i].remainingTime > 0 && processes[i].remainingTime < minRemaining) {
-            minRemaining = processes[i].remainingTime;
-            idx = i;
+        if (
+            processes[i].arrivalTime <= currentTime &&
+            processes[i].remainingTime > 0
+        ) {
+            if (
+                processes[i].remainingTime < minRemaining ||
+                (processes[i].remainingTime === minRemaining &&
+                 processes[i].arrivalTime < processes[idx]?.arrivalTime)
+            ) {
+                minRemaining = processes[i].remainingTime;
+                idx = i;
+            }
         }
     }
     return idx;
 }
-
 
 
 function calculatePriorityPreemptive() {
