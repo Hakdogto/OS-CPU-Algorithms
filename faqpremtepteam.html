@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Metadata and External Resources -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=800, initial-scale=1.0">
+    <title>Scheduling Algorithm Calculator</title>
+    
+    <!-- Linking external stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Linking Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+</head>
+<body>
+    <div class="container">
+        <!-- Dark mode toggle icon -->
+        <img src="./pictures/moon.png" id="icon" alt="Dark Mode Icon">
+        
+        <!-- Page Title and Subtitle -->
+        <h1>Scheduling Algorithm Calculator</h1>
+        <h2>Pre Emptive and Non Pre Emptive</h2>
+        
+        <!-- Form for scheduling algorithm selection and process input -->
+        <form id="processForm">
+            <!-- Dropdown to select the scheduling algorithm -->
+            <label for="algorithm">Select Algorithm:</label>
+            <select id="algorithm">
+                <option value="FCFS">First Come First Serve (FCFS)(NP)</option>
+                <option value="SJF">Shortest Job First (SJF)(NP)</option>
+                <option value="Priority">Priority (Non Pre-emptive)</option>
+                <option value="HRRN">Highest Response Ratio Next (HRRN)(NP)</option>
+                <option value="SRTF">Shortest Remaining Time First (SRTF)(P)</option>
+                <option value="PriorityPreemptive">Priority (Pre-emptive)</option>
+                <option value="RoundRobin">Round Robin(P)</option>
+            </select>
+            <br><br>
+
+            <!-- Input for specifying the number of processes -->
+            <label for="numProcesses">Enter Number of Processes:</label>
+            <input type="number" id="numProcesses" min="1" required>
+            <br><br>
+
+            <!-- Time Quantum input field for Round Robin, initially hidden -->
+            <div id="timeQuantumContainer" style="display: none;">
+                <label for="timeQuantum">Enter Time Quantum:</label>
+                <input type="number" id="timeQuantum" min="1" required>
+                <br><br>
+            </div>
+
+            <!-- Button to generate input fields for process details -->
+            <button type="button" onclick="generateInputs()">Generate Input Fields</button>
+        </form>
+
+        <!-- Container for dynamically generated input fields -->
+        <div id="inputFields"></div>
+
+        <!-- Button to trigger the scheduling calculation -->
+        <div id="calculateContainer">
+            <button id="calculateBtn" onclick="calculateScheduling()" style="display: none;">Calculate</button>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" style="display: none;">
+            <h2>Results</h2>
+            <!-- Table to display the results -->
+            <table id="resultTable">
+                <thead>
+                    <tr>
+                        <th>Process</th>
+                        <th>Arrival Time</th>
+                        <th>Burst Time</th>
+                        <th>Priority Level</th>
+                        <th>Completion Time</th>
+                        <th>Turnaround Time</th>
+                        <th>Waiting Time</th>
+                        <th>Response Time</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <!-- Paragraph to display average times -->
+            <p id="averageTimes"></p>
+        </div>
+
+        <!-- Gantt Chart Section -->
+        <div id="ganttChart" style="display: none;">
+            <h2>Gantt Chart</h2>
+            <!-- Table for Gantt chart display -->
+            <table id="ganttContainer">
+                <thead>
+                    <tr id="ganttProcessRow"></tr>
+                    <tr id="ganttTimeRow"></tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <br>
+
+    <!-- FAQ Section -->
+    <div class="wrapper">
+        <h2>Frequently Asked Questions</h2>
+        
+        <!-- Individual FAQ -->
+        <div class="faq">
+            <button class="accordion">
+                What is this project about?
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="pannel">
+                <p>
+                    This project is dedicated to our most beautiful professor, Ma. Ymelda C. Batalla, as part of our Midterm Laboratory Assignment. Created using HTML, CSS, and JavaScript, the website demonstrates our knowledge and application of CPU scheduling algorithms. It currently includes several scheduling algorithms: non-preemptive algorithms like First Come, First Serve (FCFS), Shortest Job First (SJF), Priority (Non-Preemptive), and Highest Response Ratio Next (HRRN), as well as preemptive algorithms such as Shortest Remaining Time First (SRTF), Priority (Preemptive), and Round Robin (RR).
+                </p>
+            </div>
+        </div>
+
+        <!-- Another FAQ -->
+        <div class="faq">
+            <button class="accordion">
+                How do I use the calculator?
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="pannel">
+                <p>
+                    To use the calculator, start by selecting the CPU scheduling algorithm you want to apply. Next, enter the number of processes and click "Generate" to bring up input fields for each process’s Arrival Time, Burst Time, and Priority (if applicable). Once you've filled in the values, click "Calculate" to view the results. The results include a table showing the Arrival Time, Burst Time, Priority Level, Completion Time, Turnaround Time, Waiting Time, Response Time, and averages for Turnaround and Waiting Times. Additionally, a Gantt Chart is provided, displaying the sequence of processes along with their start and end times.
+                </p>
+            </div>
+        </div>
+
+        <!-- FAQ for Dark Mode -->
+        <div class="faq">
+            <button class="accordion">
+                How do I turn on dark mode?
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="pannel">
+                <p>
+                    For visual comfort, a Dark Mode option is available on the website. To activate it, simply click the Dark Mode button located at the top right corner of the page, next to the title. This feature allows you to toggle between light and dark themes, adjusting the display to your preference.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Group Members Section -->
+    <button id="memberButton">Show Members</button>
+    <div class="groupMembers">
+        <div class="header">
+            <h1>Our Team</h1>
+        </div>
+        <div class="sub-container">
+            <!-- Individual team member -->
+            <div class="teams">
+                <img src="./pictures/ayah.png" alt="">
+                <div class="name">De Guzman, Aaliyah Jinealle </div>
+                <div class="desig">Project Manager</div>
+            </div>
+            
+            <!-- Other team members -->
+            <div class="teams">
+                <img src="./pictures/allan.png" alt="">
+                <div class="name">Lugtu, Allan Jay </div>
+                <div class="desig">Lead Developer</div>
+            </div>
+
+            <div class="teams">
+                <img src="./pictures/kurt.png" alt="">
+                <div class="name">Cerezo, Justin Kurt </div>
+                <div class="desig">Junior Developer</div>
+            </div>
+
+            <div class="teams">
+                <img src="./pictures/christ.png" alt="">
+                <div class="name">Jaranilla, John Christian </div>
+                <div class="desig">UI Designer</div>
+            </div>
+
+            <div class="teams">
+                <img src="./pictures/jerry.png" alt="">
+                <div class="name">Busante, Jerry </div>
+                <div class="desig">QA Tester</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Linking external JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
